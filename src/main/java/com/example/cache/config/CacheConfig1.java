@@ -9,6 +9,10 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * use CaffeineCacheManager & Caffeine
+ */
+
 @Log4j2
 @Configuration
 public class CacheConfig1 {

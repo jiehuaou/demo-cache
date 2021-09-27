@@ -12,32 +12,36 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * use SimpleCacheManager & CaffeineCache
+ */
+
 @Slf4j
 @Configuration
 public class LoggingCacheConfig {
 
     @Bean("logging")
-    public CacheManager cacheManager(Ticker ticker) {
-        CaffeineCache messageCache = buildCache("messages", ticker, 5);
-        CaffeineCache notificationCache = buildCache("notifications", ticker, 8);
+    public CacheManager cacheManager() {
+        CaffeineCache messageCache = buildCache("messages",  4);
+        CaffeineCache notificationCache = buildCache("notifications",  8);
         SimpleCacheManager manager = new SimpleCacheManager();
         manager.setCaches(Arrays.asList(messageCache, notificationCache));
         return manager;
     }
 
-    private CaffeineCache buildCache(String name, Ticker ticker, int secondToExpire) {
+    private CaffeineCache buildCache(String name,  int secondToExpire) {
         return new CaffeineCache(name, Caffeine.newBuilder()
                 .expireAfterWrite(secondToExpire, TimeUnit.SECONDS)
                 .maximumSize(100)
-                .ticker(ticker)
+                //.ticker(ticker)
                 .evictionListener((k,v, cause)->{
                     log.info("evit logging cache  {} [{}] by {} ", k, v, cause);
                 })
                 .build());
     }
 
-    @Bean
-    public Ticker ticker() {
-        return Ticker.systemTicker();
-    }
+//    @Bean
+//    public Ticker ticker() {
+//        return Ticker.systemTicker();
+//    }
 }

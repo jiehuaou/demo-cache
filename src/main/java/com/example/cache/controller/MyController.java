@@ -54,4 +54,11 @@ public class MyController {
 
         return Mono.just(messageProvider.getMessage(id));
     }
+
+    @RequestMapping("/notify/{id}")
+    public Mono<String> notify(@PathVariable("id") Long id) {
+        log.info("Rx client /notify/{}", id);
+
+        return Mono.just(messageProvider.getNotify(id));
+    }
 }
