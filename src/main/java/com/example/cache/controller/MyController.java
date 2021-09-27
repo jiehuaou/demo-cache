@@ -2,6 +2,7 @@ package com.example.cache.controller;
 
 import com.example.cache.provider.AnyDataProvider;
 import com.example.cache.provider.CustomerProvider;
+import com.example.cache.provider.MessageProvider;
 import com.example.cache.provider.OrderProvider;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class MyController {
     @Autowired
     AnyDataProvider anyData;
 
+    @Autowired
+    MessageProvider messageProvider;
+
     @RequestMapping("/customer/{id}")
     public Mono<String> customer(@PathVariable("id") Long id) {
         log.info("Rx client /customer/{}", id);
@@ -44,4 +48,10 @@ public class MyController {
         return Mono.just(anyData.getAny(id));
     }
 
+    @RequestMapping("/msg/{id}")
+    public Mono<String> msg(@PathVariable("id") Long id) {
+        log.info("Rx client /msg/{}", id);
+
+        return Mono.just(messageProvider.getMessage(id));
+    }
 }
